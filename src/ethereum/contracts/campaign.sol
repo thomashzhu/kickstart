@@ -30,7 +30,14 @@ contract Campaign {
   }
 
   function createRequest(string _description, uint _value, address _recipient) public restricted {
-    
+    Request memory newRequest = Request({
+      description: _description,
+      value: _value,
+      recipient: _recipient,
+      complete: false
+    });
+
+    requests.push(newRequest);
   }
 
   function approveRequest() public {
