@@ -6,6 +6,8 @@ contract Campaign {
     uint value;
     address recipient;
     bool complete;
+    uint approvalCount;
+    mapping(address => bool) approvals;
   }
 
   address public manager;
@@ -34,14 +36,22 @@ contract Campaign {
       description: _description,
       value: _value,
       recipient: _recipient,
-      complete: false
+      complete: false,
+      approvalCount: 0
+      // We don't init `approvals` because it's a reference type (not of a value type).
     });
 
     requests.push(newRequest);
   }
 
-  function approveRequest() public {
-    
+  function approveRequest(uint index) public {
+    Request storage request = requests[index];
+
+    require(approvers[msg.sender]);
+    require(!request.approvals[msg.sender]);
+
+    request.approvals[msg.sender] = true;
+    request.approvalCount++;
   }
 
   function finalizeRequest() public restricted {
