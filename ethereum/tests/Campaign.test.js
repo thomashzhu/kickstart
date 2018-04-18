@@ -65,4 +65,52 @@ describe('Campaigns', () => {
       assert(error);
     }
   });
+
+  it('allows a manager to make a payment request', async () => {
+    await campaign.methods
+      .createRequest('Buy batteries', '100', accounts[1])
+      .send({
+        from: accounts[0],
+        gas: '1000000',
+      });
+
+    const request = await campaign.methods.requests(0).call();
+    assert.equal('Buy batteries', request.description);
+  });
+
+  it('processes requests', async () => {
+    const getBalance = async (index) => {
+      let balance = await web3.eth.getBalance(accounts[index]);
+      balance = web3.utils.fromWei(balance, 'ether');
+      return parseFloat(balance);
+    };
+
+    await campaign.methods.contribute().send({
+      from: accounts[1],
+      value: web3.utils.toWei('10', 'ether'),
+    });
+
+    await campaign.methods
+      .createRequest('A request', web3.utils.toWei('5', 'ether'), accounts[1])
+      .send({
+        from: accounts[0],
+        gas: '1000000',
+      });
+
+    const beginningBalance = await getBalance(1);
+
+    await campaign.methods.approveRequest(0).send({
+      from: accounts[1],
+      gas: '1000000',
+    });
+
+    await campaign.methods.finalizeRequest(0).send({
+      from: accounts[0],
+      gas: '1000000',
+    });
+
+    const endingBalance = await getBalance(1);
+
+    assert(endingBalance - beginningBalance > 4.9);
+  });
 });
