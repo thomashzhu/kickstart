@@ -11,7 +11,7 @@
     "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
-    "mocha": "^5.1.0"
+    "mocha": "^5.1.1"
   },
   "scripts": {
     "test": "mocha --recursive tests/"
