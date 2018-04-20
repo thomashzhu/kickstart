@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
 import factory from '../ethereum/build/factory';
 
 class CampaignIndex extends Component {
-  async componentDidMount() {
+  static async getInitialProps() {
     const campaigns = await factory.methods.getDeployedCampaigns().call();
-
-    console.log(campaigns);
+    return { campaigns };
   }
 
-  render = () => (
-    <div>
-      Campaigns Index!
-    </div>
-  );
+  static propTypes = {
+    campaigns: PropTypes.shape({}).isRequired,
+  };
+
+  render() {
+    const { campaigns } = this.props;
+
+    return (
+      <div>{campaigns[0]}</div>
+    );
+  }
 }
 
 export default CampaignIndex;
