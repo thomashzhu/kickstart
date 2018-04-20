@@ -6,6 +6,7 @@ import {
 import PropTypes from 'prop-types';
 
 import factory from '../ethereum/build/factory';
+import Layout from '../components/Layout';
 
 class CampaignIndex extends Component {
   static async getInitialProps() {
@@ -33,22 +34,24 @@ class CampaignIndex extends Component {
 
   render() {
     return (
-      <div>
-        {/* TODO: Temporary workaround only */}
-        <link
-          rel="stylesheet"
-          href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"
-        />
+      <Layout>
+        <div>
+          {/* TODO: Temporary workaround only */}
+          <link
+            rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"
+          />
 
-        <h3>Open Campaigns</h3>
-        {this.renderCampaigns()}
+          <h3>Open Campaigns</h3>
+          {this.renderCampaigns()}
 
-        <Button
-          content="Create Campaign"
-          icon="add"
-          primary
-        />
-      </div>
+          <Button
+            content="Create Campaign"
+            icon="add"
+            primary
+          />
+        </div>
+      </Layout>
     );
   }
 }
