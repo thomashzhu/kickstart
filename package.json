@@ -4,7 +4,9 @@
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "scrypt": "^6.0.3"
+    "scrypt": "^6.0.3",
+    "semantic-ui-css": "^2.3.1",
+    "semantic-ui-react": "^0.79.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",
