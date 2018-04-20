@@ -25,7 +25,7 @@ class CampaignIndex extends Component {
   renderCampaigns = () => {
     const items = this.props.campaigns.map(address => ({
       header: address,
-      description: <a>View Campaign</a>,
+      description: <a href=".">View Campaign</a>,
       fluid: true,
     }));
 
@@ -43,13 +43,15 @@ class CampaignIndex extends Component {
           />
 
           <h3>Open Campaigns</h3>
-          {this.renderCampaigns()}
 
           <Button
             content="Create Campaign"
+            floated="right"
             icon="add"
             primary
           />
+
+          {this.renderCampaigns()}
         </div>
       </Layout>
     );

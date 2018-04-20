@@ -1,10 +1,24 @@
 import React from 'react';
+import { Container } from 'semantic-ui-react';
+
+import PropTypes from 'prop-types';
+
 import Header from './Header';
 
-export default props => (
-  <div>
+const Layout = props => (
+  <Container>
     <Header />
 
     {props.children}
-  </div>
+  </Container>
 );
+
+Layout.propTypes = {
+  children: PropTypes.shape({}),
+};
+
+Layout.defaultProps = {
+  children: null,
+};
+
+export default Layout;
