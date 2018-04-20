@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import {
   Button,
   Form,
+  Input,
 } from 'semantic-ui-react';
 
 import Layout from '../../components/Layout';
 
 class CampaignNew extends Component {
-  
+  state = {
+    minimumContribution: '',
+  };
 
   render = () => (
     <Layout>
@@ -15,8 +18,18 @@ class CampaignNew extends Component {
 
       <Form>
         <Form.Field>
-          <label>Minimum Contribution</label>
-          <input />
+          <label htmlFor="minimumContribution">
+            Minimum Contribution
+            <Input
+              id="minimumContribution"
+              label="wei"
+              labelPosition="right"
+              onChange={event => this.setState({
+                minimumContribution: event.target.value,
+              })}
+              value={this.state.minimumContribution}
+            />
+          </label>
         </Form.Field>
 
         <Button primary>Create!</Button>
