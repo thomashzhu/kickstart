@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 import factory from '../ethereum/contracts/instances/factory';
 import Layout from '../components/Layout';
+import { Link } from '../routes';
 
 class CampaignIndex extends Component {
   static async getInitialProps() {
@@ -25,7 +26,13 @@ class CampaignIndex extends Component {
   renderCampaigns = () => {
     const items = this.props.campaigns.map(address => ({
       header: address,
-      description: <a href=".">View Campaign</a>,
+      description: (
+        /* eslint-disable jsx-a11y/anchor-is-valid */
+        <Link route={`/campaigns/${address}`}>
+          <a href={`/campaigns/${address}`}>View Campaign</a>
+        </Link>
+        /* eslint-enable jsx-a11y/anchor-is-valid */
+      ),
       fluid: true,
     }));
 
@@ -43,12 +50,18 @@ class CampaignIndex extends Component {
 
           <h3>Open Campaigns</h3>
 
-          <Button
-            content="Create Campaign"
-            floated="right"
-            icon="add"
-            primary
-          />
+          {/* eslint-disable jsx-a11y/anchor-is-valid */}
+          <Link route="/campaigns/new">
+            <a href="/campaigns/new">
+              <Button
+                content="Create Campaign"
+                floated="right"
+                icon="add"
+                primary
+              />
+            </a>
+          </Link>
+          {/* eslint-enable jsx-a11y/anchor-is-valid */}
 
           {this.renderCampaigns()}
         </div>
