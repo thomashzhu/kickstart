@@ -5,7 +5,7 @@ import {
 } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
-import factory from '../ethereum/build/factory';
+import factory from '../ethereum/contracts/instances/factory';
 import Layout from '../components/Layout';
 
 class CampaignIndex extends Component {

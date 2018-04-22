@@ -3,20 +3,52 @@ import {
   Button,
   Form,
   Input,
+  Message,
 } from 'semantic-ui-react';
 
 import Layout from '../../components/Layout';
+import factory from '../../ethereum/contracts/instances/factory';
+import web3 from '../../ethereum/web3';
 
 class CampaignNew extends Component {
   state = {
+    errorMessage: '',
+    loading: false,
     minimumContribution: '',
+  };
+
+  onSubmit = async (event) => {
+    event.preventDefault();
+
+    const { minimumContribution } = this.state;
+
+    this.setState({
+      errorMessage: '',
+      loading: true,
+    });
+
+    try {
+      const accounts = await web3.eth.getAccounts();
+      await factory.methods
+        .createCampaign(minimumContribution)
+        .send({
+          from: accounts[0],
+        });
+    } catch (error) {
+      this.setState({ errorMessage: error.message });
+    }
+
+    this.setState({ loading: false });
   };
 
   render = () => (
     <Layout>
       <h3>Create a Campaign</h3>
 
-      <Form>
+      <Form
+        error={!!this.state.errorMessage}
+        onSubmit={this.onSubmit}
+      >
         <Form.Field>
           <label htmlFor="minimumContribution">
             Minimum Contribution
@@ -32,7 +64,18 @@ class CampaignNew extends Component {
           </label>
         </Form.Field>
 
-        <Button primary>Create!</Button>
+        <Message
+          content={this.state.errorMessage}
+          error
+          header="Oops!"
+        />
+
+        <Button
+          loading={this.state.loading}
+          primary
+        >
+          Create!
+        </Button>
       </Form>
     </Layout>
   );
