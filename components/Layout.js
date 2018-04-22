@@ -20,7 +20,10 @@ const Layout = props => (
 );
 
 Layout.propTypes = {
-  children: PropTypes.PropTypes.shape({}),
+  children: PropTypes.oneOfType([
+    PropTypes.node,
+    PropTypes.arrayOf(PropTypes.node),
+  ]),
 };
 
 Layout.defaultProps = {
