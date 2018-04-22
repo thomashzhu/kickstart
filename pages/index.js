@@ -15,7 +15,7 @@ class CampaignIndex extends Component {
   }
 
   static propTypes = {
-    campaigns: PropTypes.arrayOf(PropTypes.shape({}.isRequired)),
+    campaigns: PropTypes.arrayOf(PropTypes.string.isRequired),
   };
 
   static defaultProps = {
