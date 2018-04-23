@@ -46,7 +46,7 @@ class CampaignShow extends Component {
 
   renderCards = () => {
     const {
-      minimumContribution, balance, requestCount, approverCount, manager
+      minimumContribution, balance, requestCount, approverCount, manager,
     } = this.props;
 
     const items = [
