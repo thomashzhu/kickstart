@@ -5,36 +5,87 @@ import {
   Input,
   Message,
 } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { Router } from '../routes';
+
+import Campaign from '../ethereum/contracts/instances/campaign';
+import web3 from '../ethereum/web3';
 
 class ContributeForm extends Component {
-  state = {
-    errorMessage: '',
+  static propTypes = {
+    address: PropTypes.string.isRequired,
   };
 
-  render = () => (
-    <Form>
-      <Form.Field>
-        <label htmlFor="amount_to_contribute">
-          Amount to Contribute
-          <Input
-            id="amount_to_contribute"
-            label="ether"
-            labelPosition="right"
-          />
-        </label>
-      </Form.Field>
+  state = {
+    errorMessage: '',
+    loading: false,
+    value: '',
+  };
 
-      <Message
-        content={this.state.errorMessage}
-        error
-        header="Oops!"
-      />
+  onSubmit = async (event) => {
+    event.preventDefault();
 
-      <Button primary>
-        Contribute!
-      </Button>
-    </Form>
-  );
+    this.setState({
+      errorMessage: '',
+      loading: true,
+    });
+    
+    try {
+      const campaign = await Campaign(this.props.address);
+      const accounts = await web3.eth.getAccounts();
+
+      await campaign.methods.contribute().send({
+        from: accounts[0],
+        value: web3.utils.toWei(this.state.value, 'ether'),
+      });
+
+      Router.replaceRoute(`/campaigns/${this.props.address}`);
+    } catch (error) {
+      this.setState({ errorMessage: error.message });
+    }
+
+    this.setState({
+      loading: false,
+      value: '',
+    });
+  }
+
+  render = () => {
+    const { errorMessage, loading, value } = this.state;
+
+    return (
+      <Form
+        error={!!errorMessage}
+        onSubmit={this.onSubmit}
+      >
+        <Form.Field>
+          <label htmlFor="amount_to_contribute">
+            Amount to Contribute
+            <Input
+              id="amount_to_contribute"
+              label="ether"
+              labelPosition="right"
+              onChange={event => this.setState({ value: event.target.value })}
+              value={value}
+            />
+          </label>
+        </Form.Field>
+
+        <Message
+          content={errorMessage}
+          error
+          header="Oops!"
+        />
+
+        <Button
+          loading={loading}
+          primary
+        >
+          Contribute!
+        </Button>
+      </Form>
+    );
+  };
 }
 
 export default ContributeForm;

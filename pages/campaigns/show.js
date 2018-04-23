@@ -17,6 +17,7 @@ class CampaignShow extends Component {
     requestCount: PropTypes.string.isRequired,
     approverCount: PropTypes.string.isRequired,
     manager: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
   };
 
   static async getInitialProps(props) {
@@ -37,12 +38,13 @@ class CampaignShow extends Component {
       requestCount,
       approverCount,
       manager,
+      address,
     };
   }
 
   renderCards = () => {
     const {
-      minimumContribution, balance, requestCount, approverCount, manager,
+      minimumContribution, balance, requestCount, approverCount, manager
     } = this.props;
 
     const items = [
@@ -89,7 +91,7 @@ class CampaignShow extends Component {
         </Grid.Column>
 
         <Grid.Column width={6}>
-          <ContributeForm />
+          <ContributeForm address={this.props.address} />
         </Grid.Column>
       </Grid>
     </Layout>
