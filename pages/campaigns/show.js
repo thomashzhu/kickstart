@@ -1,11 +1,24 @@
 import React, { Component } from 'react';
-import { Card } from 'semantic-ui-react';
+import {
+  Card,
+  Grid,
+} from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
+import web3 from '../../ethereum/web3';
 import Layout from '../../components/Layout';
 import Campaign from '../../ethereum/contracts/instances/campaign';
-import web3 from '../../ethereum/web3';
+import ContributeForm from '../../components/ContributeForm';
 
 class CampaignShow extends Component {
+  static propTypes = {
+    minimumContribution: PropTypes.string.isRequired,
+    balance: PropTypes.string.isRequired,
+    requestCount: PropTypes.string.isRequired,
+    approverCount: PropTypes.string.isRequired,
+    manager: PropTypes.string.isRequired,
+  };
+
   static async getInitialProps(props) {
     const { query: { address } } = props;
     const campaign = await Campaign(address);
@@ -69,7 +82,16 @@ class CampaignShow extends Component {
   render = () => (
     <Layout>
       <h3>Campaign Show</h3>
-      {this.renderCards()}
+      
+      <Grid>
+        <Grid.Column width={10}>
+          {this.renderCards()}
+        </Grid.Column>
+
+        <Grid.Column width={6}>
+          <ContributeForm />
+        </Grid.Column>
+      </Grid>
     </Layout>
   );
 }
