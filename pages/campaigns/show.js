@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Button,
   Card,
   Grid,
 } from 'semantic-ui-react';
@@ -9,6 +10,7 @@ import web3 from '../../ethereum/web3';
 import Layout from '../../components/Layout';
 import Campaign from '../../ethereum/contracts/instances/campaign';
 import ContributeForm from '../../components/ContributeForm';
+import { Link } from '../../routes';
 
 class CampaignShow extends Component {
   static propTypes = {
@@ -81,21 +83,43 @@ class CampaignShow extends Component {
     return <Card.Group items={items} />;
   };
 
-  render = () => (
-    <Layout>
-      <h3>Campaign Show</h3>
-      
-      <Grid>
-        <Grid.Column width={10}>
-          {this.renderCards()}
-        </Grid.Column>
+  render = () => {
+    const { address } = this.props;
 
-        <Grid.Column width={6}>
-          <ContributeForm address={this.props.address} />
-        </Grid.Column>
-      </Grid>
-    </Layout>
-  );
+    return (
+      <Layout>
+        <h3>Campaign Show</h3>
+        
+        <Grid>
+          <Grid.Row>
+            <Grid.Column width={10}>
+              <Grid.Row>
+                {this.renderCards()}
+              </Grid.Row>
+            </Grid.Column>
+
+            <Grid.Column width={6}>
+              <ContributeForm address={address} />
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row>
+            <Grid.Column>
+              {/* eslint-disable jsx-a11y/anchor-is-valid */}
+              <Link route={`/campaigns/${address}/requests`}>
+                <a href={`/campaigns/${address}/requests`}>
+                  <Button primary>
+                    View Requests
+                  </Button>
+                </a>
+              </Link>
+              {/* eslint-enable jsx-a11y/anchor-is-valid */}
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Layout>
+    );
+  };
 }
 
 export default CampaignShow;
