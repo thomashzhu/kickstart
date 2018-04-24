@@ -5,6 +5,7 @@ import {
   Input,
   Message,
 } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 
 import Campaign from '../../../ethereum/contracts/instances/campaign';
 import Layout from '../../../components/Layout';
@@ -20,19 +21,70 @@ class RequestNew extends Component {
     return { address };
   }
 
+  static propTypes = {
+    address: PropTypes.string.isRequired,
+  };
+
   state = {
     description: '',
+    errorMessage: '',
+    loading: false,
     recipient: '',
     value: '',
   };
 
+  onSubmit = async (event) => {
+    event.preventDefault();
+
+    this.setState({
+      errorMessage: '',
+      loading: true,
+    });
+
+    const { address } = this.props;
+    const { description, recipient, value } = this.state;
+
+    try {
+      const campaign = await Campaign(address);
+      const accounts = await web3.eth.getAccounts();
+
+      await campaign.methods
+        .createRequest(
+          description,
+          web3.utils.toWei(value, 'ether'),
+          recipient,
+        ).send({
+          from: accounts[0],
+        });
+        
+      Router.pushRoute(`/campaigns/${address}/requests`);
+    } catch (error) {
+      this.setState({ errorMessage: error.message });
+    }
+
+    this.setState({ loading: false });
+  };
 
   render() {
-    const { description, recipient, value } = this.state;
+    const {
+      description, errorMessage, loading, recipient, value,
+    } = this.state;
+    const { address } = this.props;
 
     return (
       <Layout>
-        <Form>
+        {/* eslint-disable jsx-a11y/anchor-is-valid */}
+        <Link route={`/campaigns/${address}/requests`}>
+          <a href={`/campaigns/${address}/requests`}>Back</a>
+        </Link>
+        {/* eslint-enable jsx-a11y/anchor-is-valid */}
+
+        <h3>Create a Request</h3>
+
+        <Form
+          error={!!errorMessage}
+          onSubmit={this.onSubmit}
+        >
           <Form.Field>
             <label htmlFor="description">
               Description
@@ -51,6 +103,8 @@ class RequestNew extends Component {
 
               <Input
                 id="value"
+                label="ether"
+                labelPosition="right"
                 onChange={event => this.setState({ value: event.target.value })}
                 value={value}
               />
@@ -69,13 +123,22 @@ class RequestNew extends Component {
             </label>
           </Form.Field>
 
-          <Button primary>
+          <Message
+            content={errorMessage}
+            error
+            header="Oops!"
+          />
+
+          <Button
+            loading={loading}
+            primary
+          >
             Create!
           </Button>
         </Form>
       </Layout>
     );
-  };
+  }
 }
 
 export default RequestNew;
